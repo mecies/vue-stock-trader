@@ -15,27 +15,50 @@
       <router-link class="nav-item" to='/stocks' tag="li" activeClass="active">
         <a class="nav-link">Stocks</a>
       </router-link>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Save & Load
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Save data</a>
-          <a class="dropdown-item" href="#">Load data</a>
-        </div>
-      </li>
+        <strong class="navbar-text right">Funds: {{ funds | currency}}</strong>
+       <li class="navbar-text" @click="endDay">End day</li>
     </ul>
   </div>
 </nav>
 </template>
 
 <script>
-export default {
+import { mapActions } from 'vuex';
 
+export default {
+  data() {
+    return {
+      isOpen: false,
+    };
+  },
+  computed: {
+    funds() {
+      return this.$store.getters.funds;
+    },
+  },
+  methods: {
+    ...mapActions(['randomizeStocks']),
+    endDay() {
+      return this.randomizeStocks();
+    },
+    toggleDropdown() {
+      this.isOpen = !this.isOpen;
+    },
+    saveData() {
+      const data = {
+        funds: this.$store.getters.funds,
+        stockPortfolio: this.$store.getters.stockPortfolio,
+        stocks: this.$store.getters.getStocks,
+      };
+      this.$http.put('data.json', data);
+    },
+  },
 };
 </script>
 
-<style>
-
+<style scoped>
+.navbar-text {
+  margin-left: 15px;
+  cursor: pointer;
+}
 </style>

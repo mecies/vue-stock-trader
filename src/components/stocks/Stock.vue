@@ -14,9 +14,9 @@
       <div class="float-right">
         <button
           @click="buyStock" class="btn btn-success"
-          :disabled="quantity <= 0 || !Number.isInteger(quantity)"
+          :disabled="cantBuy || quantity <= 0 || !Number.isInteger(quantity)"
         >
-          Buy
+          {{cantBuy? 'Not enough funds' : 'Buy'}}
         </button>
       </div>
     </div>
@@ -32,6 +32,14 @@ export default {
       quantity: 0,
     };
   },
+  computed: {
+    funds() {
+      return this.$store.getters.funds;
+    },
+    cantBuy() {
+      return this.quantity * this.stock.price > this.funds;
+    },
+  },
   methods: {
     buyStock() {
       const order = {
@@ -39,7 +47,7 @@ export default {
         stockPrice: this.stock.price,
         quantity: this.quantity,
       };
-      console.log(order);
+      this.$store.dispatch('buyStock', order);
       this.quantity = 0;
     },
   },

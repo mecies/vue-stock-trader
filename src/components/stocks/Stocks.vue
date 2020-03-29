@@ -8,16 +8,12 @@
 import Stock from './Stock.vue';
 
 export default {
-  data() {
-    return {
-      stocks: [
-        { id: 1, name: 'BMW', price: 200 },
-        { id: 2, name: 'Twitter', price: 20 },
-        { id: 3, name: 'Dziq', price: 50 },
-      ],
-    };
-  },
   components: { Stock },
+  computed: {
+    stocks() {
+      return this.$store.getters.getStocks;
+    },
+  },
 };
 </script>
 
